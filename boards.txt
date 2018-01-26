@@ -1,0 +1,33 @@
+##############################################################
+
+wioGpsM4.name=Wio Tracker LTE
+
+wioGpsM4.upload.tool=stm32flash
+wioGpsM4.upload.protocol=dfu
+
+wioGpsM4.upload.use_1200bps_touch=true
+wioGpsM4.upload.file_type=bin
+wioGpsM4.upload.ram.maximum_size=196608
+wioGpsM4.upload.flash.maximum_size=1048576
+wioGpsM4.upload.maximum_size=1048576
+
+wioGpsM4.upload.usbID=0483:df11
+wioGpsM4.upload.altID=0
+wioGpsM4.upload.auto_reset=true
+wioGpsM4.upload.dfuse_addr=0x8000000
+
+wioGpsM4.build.mcu=cortex-m4
+wioGpsM4.build.f_cpu=168000000L
+wioGpsM4.build.core=arduino
+wioGpsM4.build.extra_flags=-DMCU_STM32F406VG -mthumb -DSTM32_HIGH_DENSITY -DSTM32F2 -DSTM32F4 -DBOARD_discovery_f4 -DARDUINO_STM32F4_WIO_GPS
+wioGpsM4.build.ldscript=ld/jtag.ld
+wioGpsM4.build.variant=discovery_f407
+wioGpsM4.build.variant_system_lib=lib_f407.a
+wioGpsM4.build.vect=VECT_TAB_BASE
+wioGpsM4.build.density=STM32_HIGH_DENSITY
+wioGpsM4.build.error_led_port=GPIOD
+wioGpsM4.build.error_led_pin=14
+wioGpsM4.build.board=WioGpsM4
+
+##############################################################
+
