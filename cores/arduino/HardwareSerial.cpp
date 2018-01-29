@@ -157,5 +157,5 @@ size_t HardwareSerial::write(unsigned char ch) {
 }
 
 void HardwareSerial::flush(void) {
-    usart_reset_rx(usart_device);
+    while ( !(usart_device->regs->SR & USART_SR_TC) ); // Wait for Transmission Complete to set
 }
