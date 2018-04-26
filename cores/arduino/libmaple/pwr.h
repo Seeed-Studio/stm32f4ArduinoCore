@@ -80,6 +80,8 @@ typedef struct pwr_reg_map {
 
 void pwr_init(void);
 
+void pwr_enter_standby_mode(void);
+
 #ifdef __cplusplus
 }
 #endif

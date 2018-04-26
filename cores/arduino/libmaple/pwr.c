@@ -31,6 +31,7 @@
 
 #include "pwr.h"
 #include "rcc.h"
+#include "scb.h"
 
 /**
  * Enables the power interface clock, and resets the power device.
@@ -38,4 +39,20 @@
 void pwr_init(void) {
     rcc_clk_enable(RCC_PWR);
     rcc_reset_dev(RCC_PWR);
+}
+
+/**
+ * Let MCU enter power standby mode
+*/
+void pwr_enter_standby_mode(void)
+{  
+  /* Select Standby mode */
+  PWR_BASE->CR |= (1 << PWR_CR_PDDS);
+  
+  /* Set SLEEPDEEP bit of Cortex System Control Register */
+  SCB_BASE->SCR |= (unsigned long)SCB_SCR_SLEEPDEEP_Msk;
+  
+  /* Request Wait For Interrupt */
+  __asm("wfi");
+
 }
