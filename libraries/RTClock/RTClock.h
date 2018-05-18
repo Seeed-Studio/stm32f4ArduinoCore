@@ -1,6 +1,6 @@
 #include <libmaple/rcc.h>
 #include <libmaple/bitband.h>
-#include <libmaple/pwr.h>
+// #include <libmaple/pwr.h>
 #include <libmaple/bkp.h>
 #include <libmaple/nvic.h>
 #include <libmaple/exti.h>
