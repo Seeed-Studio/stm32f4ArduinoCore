@@ -17,7 +17,6 @@ typedef enum _RESULT
 } RESULT;
 
 void setupUSB(void);
-void disableUSB(void);
 void usbSuspend(void);
 void usbResumeInit(void);
 //void usbResume(RESUME_STATE);
