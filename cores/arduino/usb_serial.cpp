@@ -39,15 +39,12 @@ USBSerial::USBSerial(void) {
 }
 
 void USBSerial::begin(void) {
-    setupUSB();
 }
 
 void USBSerial::begin(int) {
-    setupUSB();
 }
 
 void USBSerial::end(void) {
-    disableUSB();
 }
 
 size_t USBSerial::write(uint8 ch) {
