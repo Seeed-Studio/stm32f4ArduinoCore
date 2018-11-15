@@ -25,10 +25,12 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_vcp.h"
+#include "../../systick.h"
 //#include  "stm32f4_discovery.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define USB_TX_BLOCKING_TIMEOUT 10000
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 LINE_CODING linecoding =
@@ -58,6 +60,7 @@ volatile int UsbRecRead = 0;
 volatile int UsbRecWrite = 0;
 volatile int VCP_DTRHIGH = 0;
 uint8_t UsbTXBlock = 0;
+uint8_t UsbTXBlockConfigured = 0;
 
 uint32_t VCPBytesAvailable(void) {
 	return (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;
@@ -120,12 +123,16 @@ static uint16_t VCP_DeInit(void)
 /**
   * @brief  VCP_SetUSBTxBlocking
   *         Set USB blocking mode for output buffer overrun
-  * @param  Mode: 0: non blocking, 1: blocking
+  *         Blocking will block execution until the buffer can be drained.
+  *         Smart Blocking will block but only up to USB_TX_BLOCKING_TIMEOUT after 
+  *         which blocking will be disabled until the buffer is drained.
+  * @param  Mode: 0: non blocking, 1: blocking, 2: smart blocking
   * @retval None
   */
 void VCP_SetUSBTxBlocking(uint8_t Mode)
 {
 	UsbTXBlock = Mode;
+	UsbTXBlockConfigured = Mode;
 }
 
 /**
@@ -208,13 +215,28 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
   */
 uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
 {
+	volatile uint32_t start = systick_uptime();
+	volatile uint32_t now = 0;
 	while(Len-- > 0) {
-		if(UsbTXBlock) {
-			while ((APP_Rx_ptr_in - APP_Rx_ptr_out + APP_RX_DATA_SIZE) % APP_RX_DATA_SIZE + 1 >= APP_RX_DATA_SIZE)
-				;
+		if(UsbTXBlock > 0) {
+			while ((APP_Rx_ptr_in - APP_Rx_ptr_out + APP_RX_DATA_SIZE) % APP_RX_DATA_SIZE + 1 >= APP_RX_DATA_SIZE) {
+				if (UsbTXBlock == 2) {
+					now = systick_uptime();
+					if (now - start > USB_TX_BLOCKING_TIMEOUT) {
+						/* This workaround disables the blocking flag of the USB serial port after a timeout, such that
+						 * if nothing connected to the USB interface, the device doesn't block. Once a device is connected,
+						 * if the interface was configured to blocking before, the flag will be restored.
+						 */
+						UsbTXBlock = 0;
+						return USBD_BUSY;
+					}
+				}
+			}
 		} else {
 			if ((APP_Rx_ptr_in - APP_Rx_ptr_out + APP_RX_DATA_SIZE) % APP_RX_DATA_SIZE + 1 >= APP_RX_DATA_SIZE) {
 				return USBD_BUSY;
+			} else if (UsbTXBlockConfigured != UsbTXBlock && APP_Rx_ptr_in == APP_Rx_ptr_out) {
+				UsbTXBlock = UsbTXBlockConfigured;
 			}
 		}
 
