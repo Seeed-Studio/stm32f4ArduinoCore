@@ -39,6 +39,7 @@ void setupUSB (void) {
 
 extern uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len);
 extern void     VCP_SetUSBTxBlocking(uint8_t mode);
+extern void     VCP_SetUSBTxSmartBlockingTimeout(uint16_t timeout_ms);
 extern uint32_t VCPBytesAvailable(void);
 extern uint8_t  VCPGetByte(void);
 
@@ -51,14 +52,14 @@ void usbEnableBlockingTx(void) {
 	VCP_SetUSBTxBlocking(1);
 }
 
-void usbEnableSmartBlockingTx(void) {
+void usbEnableSmartBlockingTx(uint16_t timeout_ms) {
 	VCP_SetUSBTxBlocking(2);
+  VCP_SetUSBTxSmartBlockingTimeout(timeout_ms);
 }
 
 void usbDisableBlockingTx(void) {
 	VCP_SetUSBTxBlocking(0);
 }
-
 
 uint32_t usbBytesAvailable(void) {
 	return VCPBytesAvailable();

@@ -145,8 +145,8 @@ void USBSerial::enableBlockingTx(void) {
 	usbEnableBlockingTx();
 }
 
-void USBSerial::enableSmartBlockingTx(void) {
-	usbEnableSmartBlockingTx();
+void USBSerial::enableSmartBlockingTx(uint16_t timeout_ms) {
+	usbEnableSmartBlockingTx(timeout_ms);
 }
 
 void USBSerial::disableBlockingTx(void) {

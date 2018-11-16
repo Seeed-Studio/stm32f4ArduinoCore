@@ -37,7 +37,7 @@ uint8_t usbIsConnected(void);
 uint8_t usbIsConfigured(void);
 uint16_t usbGetPending(void);
 void usbEnableBlockingTx(void);
-void usbEnableSmartBlockingTx(void);
+void usbEnableSmartBlockingTx(uint16_t timeout_ms);
 void usbDisableBlockingTx(void);
 
 

@@ -30,7 +30,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define USB_TX_BLOCKING_TIMEOUT 10000
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 LINE_CODING linecoding =
@@ -61,6 +60,7 @@ volatile int UsbRecWrite = 0;
 volatile int VCP_DTRHIGH = 0;
 uint8_t UsbTXBlock = 0;
 uint8_t UsbTXBlockConfigured = 0;
+volatile uint16_t UsbTXSmartBlockingTimeout = 10000; /* Default timeout value 10 senconds */
 
 uint32_t VCPBytesAvailable(void) {
 	return (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;
@@ -133,6 +133,16 @@ void VCP_SetUSBTxBlocking(uint8_t Mode)
 {
 	UsbTXBlock = Mode;
 	UsbTXBlockConfigured = Mode;
+}
+
+/**
+ * @brief VCP_SetUSBTxSmartBlockingTimeout
+ *        Set the timeout value for USB TX blocking
+ * @param timeout_ms: timeout in million seconds
+*/
+void VCP_SetUSBTxSmartBlockingTimeout(uint16_t timeout_ms)
+{
+  UsbTXSmartBlockingTimeout = timeout_ms;
 }
 
 /**
@@ -222,7 +232,7 @@ uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
 			while ((APP_Rx_ptr_in - APP_Rx_ptr_out + APP_RX_DATA_SIZE) % APP_RX_DATA_SIZE + 1 >= APP_RX_DATA_SIZE) {
 				if (UsbTXBlock == 2) {
 					now = systick_uptime();
-					if (now - start > USB_TX_BLOCKING_TIMEOUT) {
+					if (now - start > UsbTXSmartBlockingTimeout) {
 						/* This workaround disables the blocking flag of the USB serial port after a timeout, such that
 						 * if nothing connected to the USB interface, the device doesn't block. Once a device is connected,
 						 * if the interface was configured to blocking before, the flag will be restored.

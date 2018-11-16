@@ -61,7 +61,7 @@ public:
     uint8 pending();
 
     void enableBlockingTx(void);
-    void enableSmartBlockingTx(void);
+    void enableSmartBlockingTx(uint16_t timeout_ms);
     void disableBlockingTx(void);
 };
 
