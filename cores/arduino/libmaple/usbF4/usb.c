@@ -51,6 +51,10 @@ void usbEnableBlockingTx(void) {
 	VCP_SetUSBTxBlocking(1);
 }
 
+void usbEnableSmartBlockingTx(void) {
+	VCP_SetUSBTxBlocking(2);
+}
+
 void usbDisableBlockingTx(void) {
 	VCP_SetUSBTxBlocking(0);
 }

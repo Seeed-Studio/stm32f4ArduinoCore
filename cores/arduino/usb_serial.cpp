@@ -145,6 +145,10 @@ void USBSerial::enableBlockingTx(void) {
 	usbEnableBlockingTx();
 }
 
+void USBSerial::enableSmartBlockingTx(void) {
+	usbEnableSmartBlockingTx();
+}
+
 void USBSerial::disableBlockingTx(void) {
 	usbDisableBlockingTx();
 }
