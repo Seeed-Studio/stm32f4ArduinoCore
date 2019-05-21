@@ -54,6 +54,7 @@ public:
     size_t write(uint8);
     size_t write(const char *str);
     size_t write(const void*, uint32);
+    operator bool() { return true; }
 
     uint8 getRTS();
     uint8 getDTR();
