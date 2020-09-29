@@ -10,7 +10,7 @@ STM32F4 Arduino Core
 
 Copy and paste the json URL to **Additional Boards Manager URLs**
 
-	https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json
+	https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_legacy_seeeduino_boards_index.json
 
 Search and install **Seeed STM32F4 Boards** within **Arduino Board Manager**.
 
